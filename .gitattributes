@@ -1,0 +1,28 @@
+# Enforce LF line endings in storage regardless of working-OS default (C7).
+# Mixed CRLF/LF defeats line-anchored regexes (`grep '^---$'` etc.) and the
+# failure mode is SILENCE -- an empty match, not an error. The working tree
+# may still be CRLF on Windows; what must not vary is what git stores.
+* text=auto eol=lf
+
+*.md         text eol=lf
+*.sh         text eol=lf
+*.yaml       text eol=lf
+*.yml        text eol=lf
+*.json       text eol=lf
+*.py         text eol=lf
+*.txt        text eol=lf
+.gitignore   text eol=lf
+.gitattributes text eol=lf
+
+# Binary file types -- never text-process these.
+*.png        binary
+*.jpg        binary
+*.jpeg       binary
+*.gif        binary
+*.pdf        binary
+*.tar        binary
+*.gz         binary
+*.zip        binary
+*.webp       binary
+*.ico        binary
+*.woff2      binary
