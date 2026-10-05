@@ -7,7 +7,9 @@
     "not_found_handling": "404-page"
   },
   // The custom domain (goldenwo.dev) is attached in the Cloudflare dashboard, not here: the Workers Builds API
-  // token cannot create DNS records (code 10013), and `routes` would turn workers.dev off. See docs/deploy.md.
-  "workers_dev": true,
+  // token cannot create DNS records (code 10013). See docs/deploy.md.
+  // goldenwo.dev is the only production URL, so the workers.dev copy is off. preview_urls must stay explicitly
+  // true: since Wrangler 4.44 it otherwise follows workers_dev, which would turn branch previews off too.
+  "workers_dev": false,
   "preview_urls": true
 }

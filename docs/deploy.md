@@ -19,6 +19,9 @@ owner's to do in the Cloudflare dashboard.
    - Advanced: path `/`; let Cloudflare create the API token; no variables.
 4. **Deploy**. Open the `*.workers.dev` URL and review the page and copy.
 
+Since go-live, `wrangler.jsonc` sets `"workers_dev": false`: production is only served at `goldenwo.dev`. Branch
+pushes still get preview URLs (`preview_urls` is explicitly true), shown on the Workers Builds deployment.
+
 ## B. Attach the domain (after visual sign-off)
 
 1. **Apex:** **Workers & Pages** → **goldenwo-dev** → **Domains** → **Add Domain** → `goldenwo.dev`. Do this here,

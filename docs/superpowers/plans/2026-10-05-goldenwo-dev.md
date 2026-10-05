@@ -85,6 +85,9 @@ Each was checked against Astro 7.3.5, unpdf 1.8.1 and vitest 5.0.3 in a throwawa
 20. **At 640–1023px a lone last project card spans both columns**, so groups of three leave no empty cell (test).
 21. **On phones the Experience organisation sits on its own line without the "·"** (hidden separator; the heading
     text is unchanged), so no line starts with a dot (test).
+22. **`workers_dev: false` after go-live** (owner's choice): goldenwo.dev is the only production URL. `preview_urls`
+    stays explicitly true so branch previews keep working. The account's workers.dev subdomain was also renamed
+    away from the email-derived default.
 
 ## File map
 
