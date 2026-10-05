@@ -64,5 +64,8 @@ const jsonLd = JSON.stringify(person).replaceAll('<', '\\u003c');
     <script is:inline set:html={INLINE_SCRIPTS.jsClass} />
     <a class="skip-link" href="#main">Skip to content</a>
     <slot />
+    <script>
+      import '../scripts/focus';
+    </script>
   </body>
 </html>

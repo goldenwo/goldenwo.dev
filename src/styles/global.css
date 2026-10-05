@@ -59,3 +59,28 @@ img { max-width: 100%; }
 .links { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; margin: 0; padding: 0; list-style: none; }
 .link { color: var(--accent); font-weight: 600; font-size: 0.95rem; text-decoration: none; }
 .link:hover { text-decoration: underline; }
+
+/* Blur to focus: only active once focus.ts has run (html.focus-ready). */
+/* Blur only, never opacity: a dimmed card is a contrast failure while it waits off-screen. */
+html.focus-ready .reveal { transition: filter 0.7s ease; }
+html.focus-ready .reveal:not(.in-view) { filter: blur(3px); }
+
+@media (prefers-reduced-motion: reduce) {
+  html.focus-ready .reveal { transition: none; }
+  html.focus-ready .reveal:not(.in-view) { filter: none; }
+}
+
+@media print {
+  html.focus-ready .reveal,
+  html.focus-ready .reveal:not(.in-view) { filter: none; transition: none; }
+}
+
+/* The name sharpens on load with no motion preference. Keyed on html.js, set
+   inline at the start of <body>, so the animation exists from first paint (focus.ts loads later). */
+@media (prefers-reduced-motion: no-preference) {
+  html.js .hero-blur { animation: unblur 1.4s ease-out 0.2s backwards; }
+}
+@keyframes unblur {
+  from { filter: blur(8px); }
+  to { filter: none; }
+}
