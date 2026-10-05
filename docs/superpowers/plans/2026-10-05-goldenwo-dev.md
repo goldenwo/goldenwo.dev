@@ -66,6 +66,9 @@ Each was checked against Astro 7.3.5, unpdf 1.8.1 and vitest 5.0.3 in a throwawa
 11. **JSON-LD is rendered on the home page only**, not on the 404 page.
 12. **`CHROMIUM_EXECUTABLE` override** in `playwright.config.ts`, `make-images`, `lighthouse`, `screenshots` and the
     privacy-scan test, so the same code runs on the owner's machine, in CI and in a cloud container.
+13. **`astro preview --ignore-lock` in `playwright.config.ts`** (found in Task 1): on Linux and macOS, Astro 7 detects an
+    agent and backgrounds `astro preview`, so Playwright's web server "exits early". The flag keeps it in the
+    foreground; `scripts/preview-server.mjs` already passes it.
 
 ## File map
 
@@ -176,7 +179,7 @@ set `CHROMIUM_EXECUTABLE` instead (see Global Constraints).
 cp "$BLINDLY/tsconfig.json" "$BLINDLY/vitest.config.ts" .
 ```
 
-`playwright.config.ts` (blindly-site's, plus the `CHROMIUM_EXECUTABLE` override):
+`playwright.config.ts` (blindly-site's, plus the `CHROMIUM_EXECUTABLE` override and `--ignore-lock`):
 
 ```ts
 import { defineConfig, devices } from '@playwright/test';
@@ -192,7 +195,8 @@ export default defineConfig({
     launchOptions: { executablePath: process.env.CHROMIUM_EXECUTABLE },
   },
   webServer: {
-    command: 'node node_modules/astro/bin/astro.mjs preview --port 4321',
+    // --ignore-lock keeps `astro preview` in the foreground: Astro 7 backgrounds it (and exits) when run by an agent.
+    command: 'node node_modules/astro/bin/astro.mjs preview --port 4321 --ignore-lock',
     url: 'http://localhost:4321',
     reuseExistingServer: !process.env.CI,
     timeout: 60_000,
