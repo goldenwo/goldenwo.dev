@@ -15,7 +15,25 @@ for (const path of ['/', '/does-not-exist']) {
     expect(inline.length).toBeGreaterThan(0);
     for (const source of inline) expect(csp, source.slice(0, 50)).toContain(sha256(source));
   });
+
+  test(`${path} puts the CSP before every executable script, so the policy governs them all`, async ({ page }) => {
+    await page.goto(path);
+    const ungoverned = await page.evaluate(() => {
+      const meta = document.querySelector('meta[http-equiv="content-security-policy"]');
+      if (!meta) return ['no CSP meta'];
+      return [...document.querySelectorAll('script')]
+        .filter((s) => !s.type || s.type === 'module')
+        .filter((s) => !(meta.compareDocumentPosition(s) & Node.DOCUMENT_POSITION_FOLLOWING))
+        .map((s) => (s.src || s.textContent || '').slice(0, 50));
+    });
+    expect(ungoverned).toEqual([]);
+  });
 }
+
+test('the inline js-class script runs under the policy', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.locator('html')).toHaveClass(/\bjs\b/);
+});
 
 test('nothing violates the CSP while the page loads and scrolls', async ({ page }) => {
   await page.addInitScript(() => {

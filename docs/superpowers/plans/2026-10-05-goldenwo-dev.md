@@ -69,6 +69,9 @@ Each was checked against Astro 7.3.5, unpdf 1.8.1 and vitest 5.0.3 in a throwawa
 13. **`astro preview --ignore-lock` in `playwright.config.ts`** (found in Task 1): on Linux and macOS, Astro 7 detects an
     agent and backgrounds `astro preview`, so Playwright's web server "exits early". The flag keeps it in the
     foreground; `scripts/preview-server.mjs` already passes it.
+14. **The inline `js`-class script is the first thing in `<body>`, not in `<head>`** (found in Task 6): Astro emits the
+    CSP `<meta>` at the end of `<head>`, and a meta policy only governs what follows it. A test asserts the meta
+    precedes every executable script.
 
 ## File map
 
@@ -1030,7 +1033,25 @@ for (const path of ['/', '/does-not-exist']) {
     expect(inline.length).toBeGreaterThan(0);
     for (const source of inline) expect(csp, source.slice(0, 50)).toContain(sha256(source));
   });
+
+  test(`${path} puts the CSP before every executable script, so the policy governs them all`, async ({ page }) => {
+    await page.goto(path);
+    const ungoverned = await page.evaluate(() => {
+      const meta = document.querySelector('meta[http-equiv="content-security-policy"]');
+      if (!meta) return ['no CSP meta'];
+      return [...document.querySelectorAll('script')]
+        .filter((s) => !s.type || s.type === 'module')
+        .filter((s) => !(meta.compareDocumentPosition(s) & Node.DOCUMENT_POSITION_FOLLOWING))
+        .map((s) => (s.src || s.textContent || '').slice(0, 50));
+    });
+    expect(ungoverned).toEqual([]);
+  });
 }
+
+test('the inline js-class script runs under the policy', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.locator('html')).toHaveClass(/\bjs\b/);
+});
 
 test('nothing violates the CSP while the page loads and scrolls', async ({ page }) => {
   await page.addInitScript(() => {
@@ -1236,7 +1257,6 @@ const jsonLd = JSON.stringify(person).replaceAll('<', '\\u003c');
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <script is:inline set:html={INLINE_SCRIPTS.jsClass} />
     <title>{title}</title>
     <meta name="description" content={description} />
     {!noindex && <link rel="canonical" href={canonical} />}
@@ -1260,6 +1280,9 @@ const jsonLd = JSON.stringify(person).replaceAll('<', '\\u003c');
     {!noindex && <script type="application/ld+json" set:html={jsonLd} />}
   </head>
   <body>
+    {/* First in <body>, not in <head>: Astro emits the CSP <meta> at the end of <head>, and a meta policy only
+        governs what follows it. Still runs before anything paints, so the name animation keys off html.js. */}
+    <script is:inline set:html={INLINE_SCRIPTS.jsClass} />
     <a class="skip-link" href="#main">Skip to content</a>
     <slot />
   </body>
@@ -1828,6 +1851,9 @@ Replace the end of `<body>`:
 
 ```astro
   <body>
+    {/* First in <body>, not in <head>: Astro emits the CSP <meta> at the end of <head>, and a meta policy only
+        governs what follows it. Still runs before anything paints, so the name animation keys off html.js. */}
+    <script is:inline set:html={INLINE_SCRIPTS.jsClass} />
     <a class="skip-link" href="#main">Skip to content</a>
     <slot />
     <script>

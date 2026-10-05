@@ -36,7 +36,6 @@ const jsonLd = JSON.stringify(person).replaceAll('<', '\\u003c');
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <script is:inline set:html={INLINE_SCRIPTS.jsClass} />
     <title>{title}</title>
     <meta name="description" content={description} />
     {!noindex && <link rel="canonical" href={canonical} />}
@@ -60,6 +59,9 @@ const jsonLd = JSON.stringify(person).replaceAll('<', '\\u003c');
     {!noindex && <script type="application/ld+json" set:html={jsonLd} />}
   </head>
   <body>
+    {/* First in <body>, not in <head>: Astro emits the CSP <meta> at the end of <head>, and a meta policy only
+        governs what follows it. Still runs before anything paints, so the name animation keys off html.js. */}
+    <script is:inline set:html={INLINE_SCRIPTS.jsClass} />
     <a class="skip-link" href="#main">Skip to content</a>
     <slot />
   </body>
