@@ -9,7 +9,7 @@ import { roles } from '../data/experience';
       <li class="row">
         <p class="when">{role.when}</p>
         <div>
-          <h3>{role.title} · {role.org}</h3>
+          <h3>{role.title} <span class="org">· {role.org}</span></h3>
           {role.summary && <p class="summary">{role.summary}</p>}
         </div>
       </li>
@@ -23,6 +23,8 @@ import { roles } from '../data/experience';
   .row:first-child { border-top: 0; }
   .when { margin: 0; font-size: 0.9rem; font-variant-numeric: tabular-nums; color: var(--muted); }
   h3 { margin: 0; font-size: 1rem; letter-spacing: -0.01em; }
+  /* Wrap before the organisation, never inside it or after a dangling dot. */
+  .org { white-space: nowrap; }
   .summary { margin: 2px 0 0; font-size: 0.95rem; color: var(--muted); }
   @media (min-width: 640px) { .row { grid-template-columns: 120px 1fr; gap: 16px; } .when { padding-top: 1px; } }
 </style>

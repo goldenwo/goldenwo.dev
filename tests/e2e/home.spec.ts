@@ -104,3 +104,17 @@ for (const width of [375, 1280]) {
     expect(columns).toEqual(columns.map((c) => `${c.split(': ')[0]}: ${expected}`));
   });
 }
+
+test('the nav stays on one line down to 320px', async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 800 });
+  const lines = await page.locator('.site-header').evaluate((header) =>
+    [...header.querySelectorAll('a')].map((a) => {
+      const range = document.createRange();
+      range.selectNodeContents(a);
+      return new Set([...range.getClientRects()].map((r) => Math.round(r.top))).size;
+    }),
+  );
+  expect(lines).toEqual([1, 1, 1, 1]);
+  const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+  expect(overflow).toBeLessThanOrEqual(0);
+});
