@@ -72,6 +72,14 @@ Each was checked against Astro 7.3.5, unpdf 1.8.1 and vitest 5.0.3 in a throwawa
 14. **The inline `js`-class script is the first thing in `<body>`, not in `<head>`** (found in Task 6): Astro emits the
     CSP `<meta>` at the end of `<head>`, and a meta policy only governs what follows it. A test asserts the meta
     precedes every executable script.
+15. **`.section` sets `padding-block` only** (found in Task 7 review): the `padding` shorthand overrode `.wrap`'s side
+    gutter, so sections ran edge to edge on phones. `home.spec.ts` gained two tests that every `.wrap` shares one
+    content column at 375px and 1280px.
+16. **Experience titles keep "· org" together** (`white-space: nowrap` on a span), so phones never break inside an
+    organisation name or leave a dangling dot. The heading text is unchanged.
+17. **The nav stays on one line down to 320px** (`nowrap` wordmark, tighter links below 360px), with a test.
+18. **The empty-directory privacy-scan test also asserts the `FAIL no files to scan` line**, so a crashing script
+    cannot pass it by exiting 1.
 
 ## File map
 
@@ -1204,7 +1212,7 @@ img { max-width: 100%; }
   backdrop-filter: blur(8px);
 }
 
-.section { padding: 28px 0; }
+.section { padding-block: 28px; } /* block only: .section is paired with .wrap, whose side gutter must survive */
 .section-title {
   margin: 0 0 16px;
   font-size: 0.8rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
@@ -1469,10 +1477,11 @@ import { site } from '../data/site';
     border-bottom: 1px solid var(--line);
   }
   .nav { display: flex; align-items: center; justify-content: space-between; height: 60px; }
-  .wordmark { font-weight: 700; font-size: 1.05rem; letter-spacing: -0.02em; color: var(--ink); text-decoration: none; }
+  .wordmark { font-weight: 700; font-size: 1.05rem; letter-spacing: -0.02em; color: var(--ink); text-decoration: none; white-space: nowrap; }
   ul { display: flex; gap: 14px; margin: 0; padding: 0; list-style: none; }
   ul a { color: var(--muted); font-size: 0.92rem; text-decoration: none; }
   ul a:hover { color: var(--ink); }
+  @media (max-width: 359px) { ul { gap: 10px; } ul a { font-size: 0.85rem; } }
   @media (min-width: 640px) { ul { gap: 22px; } ul a { font-size: 0.95rem; } }
 </style>
 ```
@@ -1545,7 +1554,7 @@ import { roles } from '../data/experience';
       <li class="row">
         <p class="when">{role.when}</p>
         <div>
-          <h3>{role.title} · {role.org}</h3>
+          <h3>{role.title} <span class="org">· {role.org}</span></h3>
           {role.summary && <p class="summary">{role.summary}</p>}
         </div>
       </li>
@@ -1559,6 +1568,8 @@ import { roles } from '../data/experience';
   .row:first-child { border-top: 0; }
   .when { margin: 0; font-size: 0.9rem; font-variant-numeric: tabular-nums; color: var(--muted); }
   h3 { margin: 0; font-size: 1rem; letter-spacing: -0.01em; }
+  /* Wrap before the organisation, never inside it or after a dangling dot. */
+  .org { white-space: nowrap; }
   .summary { margin: 2px 0 0; font-size: 0.95rem; color: var(--muted); }
   @media (min-width: 640px) { .row { grid-template-columns: 120px 1fr; gap: 16px; } .when { padding-top: 1px; } }
 </style>
@@ -1834,7 +1845,7 @@ html.focus-ready .reveal:not(.in-view) { filter: blur(3px); }
 }
 
 /* The name sharpens on load with no motion preference. Keyed on html.js, set
-   inline in <head>, so the animation exists from first paint (focus.ts loads later). */
+   inline at the start of <body>, so the animation exists from first paint (focus.ts loads later). */
 @media (prefers-reduced-motion: no-preference) {
   html.js .hero-blur { animation: unblur 1.4s ease-out 0.2s backwards; }
 }
@@ -1940,7 +1951,9 @@ test('fails on an email address in PDF metadata', async () => {
 }, 30_000);
 
 test('fails when there is nothing to scan', () => {
-  expect(scan(fixture({})).status).toBe(1);
+  const result = scan(fixture({}));
+  expect(result.status).toBe(1);
+  expect(result.stdout).toContain('FAIL no files to scan');
 });
 ```
 

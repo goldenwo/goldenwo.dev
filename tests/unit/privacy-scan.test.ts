@@ -54,5 +54,7 @@ test('fails on an email address in PDF metadata', async () => {
 }, 30_000);
 
 test('fails when there is nothing to scan', () => {
-  expect(scan(fixture({})).status).toBe(1);
+  const result = scan(fixture({}));
+  expect(result.status).toBe(1);
+  expect(result.stdout).toContain('FAIL no files to scan');
 });
