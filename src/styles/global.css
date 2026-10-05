@@ -49,7 +49,7 @@ img { max-width: 100%; }
   backdrop-filter: blur(8px);
 }
 
-.section { padding: 28px 0; }
+.section { padding-block: 28px; } /* block only: .section is paired with .wrap, whose side gutter must survive */
 .section-title {
   margin: 0 0 16px;
   font-size: 0.8rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;

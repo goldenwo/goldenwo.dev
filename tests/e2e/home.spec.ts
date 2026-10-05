@@ -89,3 +89,18 @@ test('the hero stacks the photo above the name on phones and beside it on deskto
   await page.setViewportSize({ width: 1280, height: 900 });
   expect((await photo.boundingBox())!.x + (await photo.boundingBox())!.width).toBeLessThanOrEqual((await name.boundingBox())!.x);
 });
+
+for (const width of [375, 1280]) {
+  test(`nav, hero, sections and footer share one content column at ${width}px`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 900 });
+    const columns = await page.locator('.wrap').evaluateAll((els) =>
+      els.map((el) => {
+        const box = el.getBoundingClientRect();
+        const style = getComputedStyle(el);
+        return `${el.id || el.className}: ${Math.round(box.left + parseFloat(style.paddingLeft))}–${Math.round(box.right - parseFloat(style.paddingRight))}`;
+      }),
+    );
+    const expected = columns[0].split(': ')[1];
+    expect(columns).toEqual(columns.map((c) => `${c.split(': ')[0]}: ${expected}`));
+  });
+}
