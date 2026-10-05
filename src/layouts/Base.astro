@@ -1,0 +1,66 @@
+---
+// src/layouts/Base.astro
+import '@fontsource-variable/inter';
+import '../styles/tokens.css';
+import '../styles/global.css';
+import { getImage } from 'astro:assets';
+import headshot from '../assets/headshot.jpg';
+import { site } from '../data/site';
+import { INLINE_SCRIPTS } from '../inline-scripts.mjs';
+
+interface Props {
+  title?: string;
+  description?: string;
+  path?: string;
+  noindex?: boolean;
+}
+
+const { title = site.title, description = site.description, path = '/', noindex = false } = Astro.props;
+const canonical = new URL(path, site.url).href;
+const ogImage = new URL('/og-image.png', site.url).href;
+const photo = await getImage({ src: headshot, width: 296, format: 'jpg' });
+const person = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: site.name,
+  url: new URL('/', site.url).href,
+  jobTitle: site.jobTitle,
+  image: new URL(photo.src, site.url).href,
+  sameAs: [site.links.linkedin, site.links.github],
+};
+// JSON inside <script> must never be able to close the element.
+const jsonLd = JSON.stringify(person).replaceAll('<', '\\u003c');
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script is:inline set:html={INLINE_SCRIPTS.jsClass} />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    {!noindex && <link rel="canonical" href={canonical} />}
+    {noindex && <meta name="robots" content="noindex" />}
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f2eef8" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#15161f" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta property="og:type" content="profile" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={site.ogImageAlt} />
+    <meta name="twitter:card" content="summary_large_image" />
+    {!noindex && <script type="application/ld+json" set:html={jsonLd} />}
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <slot />
+  </body>
+</html>

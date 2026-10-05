@@ -1,0 +1,17 @@
+---
+// src/pages/404.astro
+import Base from '../layouts/Base.astro';
+---
+<Base title="Page not found · Golden Wo" path="/404" noindex>
+  <main id="main" class="wrap notfound">
+    <h1>Nothing here.</h1>
+    <p>That page doesn't exist. <a href="/">Back home</a></p>
+  </main>
+</Base>
+
+<style>
+  .notfound { padding-top: 20vh; padding-bottom: 20vh; }
+  h1 { font-size: clamp(2.5rem, 7vw, 4rem); letter-spacing: -0.04em; margin: 0 0 12px; }
+  p { color: var(--muted); }
+  a { color: var(--accent); font-weight: 600; }
+</style>
