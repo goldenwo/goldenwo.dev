@@ -80,6 +80,11 @@ Each was checked against Astro 7.3.5, unpdf 1.8.1 and vitest 5.0.3 in a throwawa
 17. **The nav stays on one line down to 320px** (`nowrap` wordmark, tighter links below 360px), with a test.
 18. **The empty-directory privacy-scan test also asserts the `FAIL no files to scan` line**, so a crashing script
     cannot pass it by exiting 1.
+19. **`screenshots.mjs` loads lazy images and grows the viewport to the page height** before each capture (found in
+    Task 12): the studio art was sometimes blank, and full-page shots showed a background seam no visitor sees.
+20. **At 640–1023px a lone last project card spans both columns**, so groups of three leave no empty cell (test).
+21. **On phones the Experience organisation sits on its own line without the "·"** (hidden separator; the heading
+    text is unchanged), so no line starts with a dot (test).
 
 ## File map
 
@@ -1554,7 +1559,7 @@ import { roles } from '../data/experience';
       <li class="row">
         <p class="when">{role.when}</p>
         <div>
-          <h3>{role.title} <span class="org">· {role.org}</span></h3>
+          <h3>{role.title} <span class="org"><span class="sep">· </span>{role.org}</span></h3>
           {role.summary && <p class="summary">{role.summary}</p>}
         </div>
       </li>
@@ -1570,6 +1575,8 @@ import { roles } from '../data/experience';
   h3 { margin: 0; font-size: 1rem; letter-spacing: -0.01em; }
   /* Wrap before the organisation, never inside it or after a dangling dot. */
   .org { white-space: nowrap; }
+  /* Phones: the organisation gets its own line, so no line starts with the separator. */
+  @media (max-width: 639px) { .org { display: block; } .sep { display: none; } }
   .summary { margin: 2px 0 0; font-size: 0.95rem; color: var(--muted); }
   @media (min-width: 640px) { .row { grid-template-columns: 120px 1fr; gap: 16px; } .when { padding-top: 1px; } }
 </style>
@@ -1675,6 +1682,8 @@ const { group, projects } = Astro.props;
   h3 { margin: 0 0 12px; font-size: 1.1rem; letter-spacing: -0.01em; }
   .grid { display: grid; grid-template-columns: 1fr; gap: 14px; }
   @media (min-width: 640px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+  /* Two columns: a lone last card spans the row instead of leaving an empty cell. Cards are ProjectCard's, hence :global. */
+  @media (min-width: 640px) and (max-width: 1023px) { .grid > :global(:last-child:nth-child(odd)) { grid-column: 1 / -1; } }
   @media (min-width: 1024px) { .grid { grid-template-columns: repeat(3, 1fr); } }
 </style>
 ```

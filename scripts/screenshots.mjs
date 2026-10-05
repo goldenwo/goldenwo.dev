@@ -22,6 +22,10 @@ try {
           }),
         ),
       );
+      // Grow the viewport to the page height: a full-page capture otherwise paints the fixed background
+      // gradient over the first screen only, leaving a seam that no visitor ever sees.
+      const height = await page.evaluate(() => document.documentElement.scrollHeight);
+      await page.setViewportSize({ width, height });
       await page.screenshot({ path: `screenshots/home-${width}-${colorScheme}.png`, fullPage: true });
       await page.close();
     }

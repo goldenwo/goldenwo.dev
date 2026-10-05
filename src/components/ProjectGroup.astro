@@ -22,5 +22,7 @@ const { group, projects } = Astro.props;
   h3 { margin: 0 0 12px; font-size: 1.1rem; letter-spacing: -0.01em; }
   .grid { display: grid; grid-template-columns: 1fr; gap: 14px; }
   @media (min-width: 640px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+  /* Two columns: a lone last card spans the row instead of leaving an empty cell. Cards are ProjectCard's, hence :global. */
+  @media (min-width: 640px) and (max-width: 1023px) { .grid > :global(:last-child:nth-child(odd)) { grid-column: 1 / -1; } }
   @media (min-width: 1024px) { .grid { grid-template-columns: repeat(3, 1fr); } }
 </style>

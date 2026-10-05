@@ -118,3 +118,21 @@ test('the nav stays on one line down to 320px', async ({ page }) => {
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
   expect(overflow).toBeLessThanOrEqual(0);
 });
+
+test('a lone last project card spans the row in the two-column layout', async ({ page }) => {
+  await page.setViewportSize({ width: 768, height: 900 });
+  for (const grid of await page.locator('#projects .grid').all()) {
+    const gridBox = (await grid.boundingBox())!;
+    const lastBox = (await grid.locator('.card').last().boundingBox())!;
+    expect(Math.round(lastBox.width)).toBe(Math.round(gridBox.width));
+  }
+});
+
+test('on phones the organisation gets its own line, without a separator', async ({ page }) => {
+  await page.setViewportSize({ width: 375, height: 900 });
+  const first = page.locator('#experience h3').first();
+  expect(await first.locator('.org').evaluate((el) => getComputedStyle(el).display)).toBe('block');
+  await expect(first.locator('.sep')).toBeHidden();
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await expect(first.locator('.sep')).toBeVisible();
+});
