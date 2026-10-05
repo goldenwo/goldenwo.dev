@@ -1,0 +1,13 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "goldenwo-dev",
+  "compatibility_date": "2026-10-05",
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "404-page"
+  },
+  // The custom domain (goldenwo.dev) is attached in the Cloudflare dashboard, not here: the Workers Builds API
+  // token cannot create DNS records (code 10013), and `routes` would turn workers.dev off. See docs/deploy.md.
+  "workers_dev": true,
+  "preview_urls": true
+}
