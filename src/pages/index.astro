@@ -1,6 +1,30 @@
 ---
+import { existsSync } from 'node:fs';
+import { join } from 'node:path';
+import Experience from '../components/Experience.astro';
+import Footer from '../components/Footer.astro';
+import Hero from '../components/Hero.astro';
+import Nav from '../components/Nav.astro';
+import ProjectGroup from '../components/ProjectGroup.astro';
+import Studio from '../components/Studio.astro';
+import { content } from '../data/content';
+import { assertValidContent } from '../data/validate';
 import Base from '../layouts/Base.astro';
+
+assertValidContent(content, (path) => existsSync(join(process.cwd(), 'public', path)));
 ---
 <Base>
-  <main id="main" class="wrap"><h1>Golden Wo</h1></main>
+  <Nav />
+  <main id="main">
+    <Hero />
+    <Experience />
+    <Studio />
+    <section id="projects" class="wrap section" aria-labelledby="projects-title">
+      <h2 id="projects-title" class="section-title">Projects</h2>
+      {content.groups.map((group) => (
+        <ProjectGroup group={group} projects={content.projects.filter((p) => p.group === group.id)} />
+      ))}
+    </section>
+  </main>
+  <Footer />
 </Base>

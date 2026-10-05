@@ -1,0 +1,29 @@
+---
+// src/components/Nav.astro
+import { site } from '../data/site';
+---
+<header class="site-header">
+  <nav class="wrap nav" aria-label="Primary">
+    <a class="wordmark" href="#top">{site.name}</a>
+    <ul>
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#blindly">Blindly</a></li>
+      <li><a href="#projects">Projects</a></li>
+    </ul>
+  </nav>
+</header>
+
+<style>
+  .site-header {
+    position: sticky; top: 0; z-index: 10;
+    background: color-mix(in srgb, var(--bg-1) 60%, transparent);
+    backdrop-filter: saturate(1.4) blur(12px);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav { display: flex; align-items: center; justify-content: space-between; height: 60px; }
+  .wordmark { font-weight: 700; font-size: 1.05rem; letter-spacing: -0.02em; color: var(--ink); text-decoration: none; }
+  ul { display: flex; gap: 14px; margin: 0; padding: 0; list-style: none; }
+  ul a { color: var(--muted); font-size: 0.92rem; text-decoration: none; }
+  ul a:hover { color: var(--ink); }
+  @media (min-width: 640px) { ul { gap: 22px; } ul a { font-size: 0.95rem; } }
+</style>

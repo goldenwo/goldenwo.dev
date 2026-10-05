@@ -1,0 +1,49 @@
+---
+// src/components/Hero.astro
+import { Picture } from 'astro:assets';
+import headshot from '../assets/headshot.jpg';
+import { site } from '../data/site';
+---
+<section id="top" class="hero wrap">
+  <Picture
+    src={headshot}
+    formats={['avif', 'webp']}
+    widths={[148, 296]}
+    sizes="148px"
+    alt={site.photoAlt}
+    class="photo"
+    loading="eager"
+    fetchpriority="high"
+  />
+  <div>
+    <h1><span class="hero-blur">{site.name}</span></h1>
+    <p class="headline">{site.headline}</p>
+    <p class="bio">{site.bio}</p>
+    <ul class="actions">
+      {site.resumePdf && <li><a class="btn primary" href={site.resumePdf}>Résumé (PDF)</a></li>}
+      <li><a class="btn" href={site.links.linkedin}>LinkedIn</a></li>
+      <li><a class="btn" href={site.links.github}>GitHub</a></li>
+    </ul>
+  </div>
+</section>
+
+<style>
+  .hero { display: grid; grid-template-columns: 1fr; gap: 20px; padding-top: clamp(40px, 8vw, 88px); padding-bottom: 32px; }
+  .photo { display: block; width: 112px; height: 112px; border-radius: 50%; object-fit: cover; border: 1px solid var(--line); }
+  h1 { margin: 0; font-size: clamp(2.25rem, 6vw, 3rem); font-weight: 800; line-height: 1.05; letter-spacing: -0.04em; }
+  .hero-blur { display: inline-block; }
+  .headline { margin: 6px 0 14px; font-size: 1.25rem; font-weight: 600; letter-spacing: -0.01em; color: var(--muted); }
+  .bio { margin: 0 0 20px; max-width: 60ch; }
+  .actions { display: flex; flex-wrap: wrap; gap: 10px; margin: 0; padding: 0; list-style: none; }
+  .btn {
+    display: inline-block; padding: 9px 18px; border-radius: 999px;
+    border: 1px solid var(--line); background: var(--card-strong); box-shadow: var(--shadow);
+    color: var(--ink); font-weight: 600; text-decoration: none;
+  }
+  .btn:hover { border-color: var(--accent); }
+  .btn.primary { background: var(--accent); color: var(--on-accent); border-color: transparent; }
+  @media (min-width: 720px) {
+    .hero { grid-template-columns: 148px 1fr; gap: 32px; align-items: center; }
+    .photo { width: 148px; height: 148px; }
+  }
+</style>
