@@ -4,11 +4,11 @@ import type { FocusItem } from './types';
 export const focus: FocusItem[] = [
   {
     title: 'Agent reliability',
-    text: 'Adversarial tests and eval harnesses that catch the silent, structural failures single-turn evals miss.',
+    text: 'Two-layer evals (deterministic checks plus LLM-as-judge) with negative controls and ablations, and hooks as guardrails.',
   },
   {
     title: 'AI-driven development',
-    text: 'Multi-agent orchestration, MCP servers and spec-driven pipelines that turn epic-sized work into days.',
+    text: 'Spec-driven, multi-agent workflows and agent scaffolding. In a proof of concept they cut effort by at least half.',
   },
   {
     title: 'Regulated environments',
