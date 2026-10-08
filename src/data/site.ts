@@ -5,12 +5,12 @@ export const site: Site = {
   url: 'https://goldenwo.dev',
   title: 'Golden Wo · Software engineer',
   description:
-    'Golden Wo is a software engineer in Boston working on front-end platforms, AI agent tooling and market research, and the founder of Blindly.',
-  headline: 'Software engineer in Boston.',
-  bio: "I'm a full-stack engineer at Fidelity Investments, where I build the shared Angular libraries and micro-frontends other teams build on, and lately the LLM tooling around them. Outside work I run Blindly, a small software studio for games, agent tooling and market research.",
+    'Golden Wo is a software engineer in Boston building AI systems that hold up in production: agent reliability, AI-driven development, and software for regulated environments.',
+  headline: 'Software engineer building AI systems that hold up in production.',
+  bio: 'I learned engineering inside regulated finance. At Fidelity I went from frontend platform work to AI-driven code migrations and AI developer tooling. On my own time I build under Blindly, from agent tooling to a game I’m making for fun. Based in Boston.',
   jobTitle: 'Software Engineer',
   links: { linkedin: 'https://www.linkedin.com/in/goldenwo/', github: 'https://github.com/goldenwo' },
   resumePdf: null,
   photoAlt: 'Portrait of Golden Wo',
-  ogImageAlt: 'Golden Wo, software engineer in Boston',
+  ogImageAlt: 'Golden Wo, software engineer building AI systems that hold up in production',
 };

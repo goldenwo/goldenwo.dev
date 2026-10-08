@@ -4,7 +4,8 @@ export const studio: Studio = {
   name: 'Blindly',
   url: 'https://blindly.ai/',
   role: 'Founder',
-  blurb: 'an independent software studio. Its first game, Raccoon Heist: Idle Crates, is in closed testing on Android.',
+  blurb:
+    'where I build on my own time: agent tooling first, plus Raccoon Heist: Idle Crates, a game I’m making for fun (in closed testing on Android). It’s where ideas get tried before they meet production constraints at work.',
   featured: {
     name: 'Raccoon Heist',
     url: 'https://raccoon.blindly.ai/',

@@ -2,6 +2,7 @@ import { test, expect } from '@playwright/test';
 import { findPrivateData } from '../../src/privacy.mjs';
 import { roles } from '../../src/data/experience';
 import { groups, projects } from '../../src/data/projects';
+import { focus } from '../../src/data/focus';
 import { site } from '../../src/data/site';
 import { studio } from '../../src/data/studio';
 
@@ -122,9 +123,12 @@ test('the nav stays on one line down to 320px', async ({ page }) => {
 test('a lone last project card spans the row in the two-column layout', async ({ page }) => {
   await page.setViewportSize({ width: 768, height: 900 });
   for (const grid of await page.locator('#projects .grid').all()) {
+    const cards = grid.locator('.card');
     const gridBox = (await grid.boundingBox())!;
-    const lastBox = (await grid.locator('.card').last().boundingBox())!;
-    expect(Math.round(lastBox.width)).toBe(Math.round(gridBox.width));
+    const lastBox = (await cards.last().boundingBox())!;
+    const firstBox = (await cards.first().boundingBox())!;
+    if ((await cards.count()) % 2 === 1) expect(Math.round(lastBox.width)).toBe(Math.round(gridBox.width));
+    else expect(Math.round(lastBox.width)).toBe(Math.round(firstBox.width));
   }
 });
 
@@ -135,4 +139,19 @@ test('on phones the organisation gets its own line, without a separator', async 
   await expect(first.locator('.sep')).toBeHidden();
   await page.setViewportSize({ width: 1280, height: 900 });
   await expect(first.locator('.sep')).toBeVisible();
+});
+
+test('focus sits between the hero and experience, with the three items in order', async ({ page }) => {
+  await expect(page.locator('#focus h3')).toHaveText(focus.map((f) => f.title));
+  await expect(page.locator('#focus p')).toHaveText(focus.map((f) => f.text));
+  const order = await page.locator('main > section').evaluateAll((els) => els.map((e) => e.id));
+  expect(order.slice(0, 3)).toEqual(['top', 'focus', 'experience']);
+});
+
+test('private projects are described but never linked', async ({ page }) => {
+  for (const p of projects.filter((x) => x.private)) {
+    const card = page.locator(`[data-project="${p.id}"]`);
+    await expect(card.locator('.private')).toHaveText('Private repository');
+    await expect(card.locator('a')).toHaveCount(0);
+  }
 });

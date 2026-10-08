@@ -25,6 +25,7 @@ const valid = (): Content => ({
     { id: 'tool', name: 'tool', tagline: 'A tool', description: 'Does things.', group: 'agent-tooling', links: { source: 'https://github.com/someone/tool' } },
     { id: 'study', name: 'study', tagline: 'A study', description: 'Finds things.', group: 'research', links: {} },
   ],
+  focus: [{ title: 'Focus', text: 'What I work on.' }],
   studio: {
     name: 'Studio',
     url: 'https://studio.example/',
@@ -90,6 +91,20 @@ describe('validateContent', () => {
     expect(validateContent(c, (path) => path === '/cv.pdf')).toEqual([]);
     c.site.resumePdf = 'cv.docx';
     expect(validateContent(c, () => true)).toContain('site.resumePdf must be an absolute path to a .pdf');
+  });
+
+  test('a private project carries no links', () => {
+    const c = valid();
+    c.projects[0].private = true;
+    expect(validateContent(c, noFiles)).toContain('project tool: a private project cannot have links');
+    c.projects[0].links = {};
+    expect(validateContent(c, noFiles)).toEqual([]);
+  });
+
+  test('focus items need a title and text', () => {
+    const c = valid();
+    c.focus.push({ title: ' ', text: '' });
+    expect(validateContent(c, noFiles)).toContain('focus 1: needs a title and text');
   });
 
   test('rejects email addresses and phone numbers anywhere in the content', () => {

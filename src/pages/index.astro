@@ -2,6 +2,7 @@
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import Experience from '../components/Experience.astro';
+import Focus from '../components/Focus.astro';
 import Footer from '../components/Footer.astro';
 import Hero from '../components/Hero.astro';
 import Nav from '../components/Nav.astro';
@@ -17,6 +18,7 @@ assertValidContent(content, (path) => existsSync(join(process.cwd(), 'public', p
   <Nav />
   <main id="main">
     <Hero />
+    <Focus />
     <Experience />
     <Studio />
     <section id="projects" class="wrap section" aria-labelledby="projects-title">

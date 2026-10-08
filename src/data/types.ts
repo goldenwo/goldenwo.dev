@@ -1,4 +1,4 @@
-export const PROJECT_GROUPS = ['agent-tooling', 'research'] as const;
+export const PROJECT_GROUPS = ['reliability', 'agent-tooling', 'research'] as const;
 export type ProjectGroupId = (typeof PROJECT_GROUPS)[number];
 
 export interface Site {
@@ -44,8 +44,16 @@ export interface Project {
   /** one or two sentences */
   description: string;
   group: ProjectGroupId;
-  /** https only */
+  /** https only; must be empty when private */
   links: { site?: string; source?: string };
+  /** private repository: described, never linked */
+  private?: boolean;
+}
+
+export interface FocusItem {
+  title: string;
+  /** one line */
+  text: string;
 }
 
 export interface Studio {
@@ -59,6 +67,7 @@ export interface Studio {
 
 export interface Content {
   site: Site;
+  focus: FocusItem[];
   roles: Role[];
   groups: ProjectGroupInfo[];
   projects: Project[];

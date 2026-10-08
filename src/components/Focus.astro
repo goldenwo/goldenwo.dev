@@ -1,0 +1,22 @@
+---
+// src/components/Focus.astro
+import { focus } from '../data/focus';
+---
+<section id="focus" class="wrap section" aria-labelledby="focus-title">
+  <h2 id="focus-title" class="section-title">Focus</h2>
+  <ul class="focus">
+    {focus.map((item) => (
+      <li class="card reveal">
+        <h3>{item.title}</h3>
+        <p>{item.text}</p>
+      </li>
+    ))}
+  </ul>
+</section>
+
+<style>
+  .focus { display: grid; grid-template-columns: 1fr; gap: 14px; margin: 0; padding: 0; list-style: none; }
+  h3 { margin: 0 0 6px; font-size: 1rem; letter-spacing: -0.01em; }
+  p { margin: 0; font-size: 0.92rem; color: var(--muted); }
+  @media (min-width: 720px) { .focus { grid-template-columns: repeat(3, 1fr); } }
+</style>

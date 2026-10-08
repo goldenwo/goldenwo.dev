@@ -38,7 +38,12 @@ export function validateContent(content: Content, publicFileExists: (path: strin
   }
   for (const p of projects) {
     if (!groups.some((g) => g.id === p.group)) errors.push(`project ${p.id}: unknown group "${p.group}"`);
+    if (p.private && Object.values(p.links).some(Boolean)) errors.push(`project ${p.id}: a private project cannot have links`);
   }
+
+  content.focus.forEach((f, i) => {
+    if (!f.title.trim() || !f.text.trim()) errors.push(`focus ${i}: needs a title and text`);
+  });
 
   if (!site.photoAlt.trim()) errors.push('site.photoAlt: the photo needs alt text');
   if (!studio.featured.art.alt.trim()) errors.push('studio.featured.art: the art needs alt text');

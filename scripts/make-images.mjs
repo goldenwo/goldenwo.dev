@@ -13,13 +13,13 @@ const ogHtml = `<html><head><style>${fontFace}
     font-family:Inter;color:#1d1a24;background:linear-gradient(135deg,#f6e6da 0%,#e9e0f6 50%,#dcecf0 100%)}
   .mark{position:absolute;top:64px;left:96px;font-weight:700;font-size:30px;letter-spacing:-.02em;color:#5b3fc4}
   h1{margin:0 0 20px;max-width:620px;font-size:112px;line-height:1;letter-spacing:-.045em;font-weight:800}
-  p{margin:0;max-width:620px;font-size:40px;font-weight:600;color:#565068;letter-spacing:-.01em}
+  p{margin:0;max-width:620px;font-size:36px;line-height:1.25;font-weight:600;color:#565068;letter-spacing:-.01em}
   img{position:absolute;right:96px;top:50%;transform:translateY(-50%);width:300px;height:300px;border-radius:50%;
     object-fit:cover;border:6px solid rgba(255,255,255,.75)}
 </style></head><body>
   <div class="mark">goldenwo.dev</div>
   <h1>Golden Wo</h1>
-  <p>Software engineer in Boston.</p>
+  <p>Software engineer building AI systems that hold up in production.</p>
   <img src="data:image/jpeg;base64,${photo}" alt="">
 </body></html>`;
 
