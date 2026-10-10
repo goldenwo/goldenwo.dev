@@ -10,7 +10,7 @@ export const site: Site = {
   bio: 'I learned engineering inside regulated finance. At Fidelity I went from frontend platform work to AI-driven code migrations and AI developer tooling. On my own time I build under Blindly, from agent tooling to a game I’m making for fun. Based in Boston.',
   jobTitle: 'Software Engineer',
   links: { linkedin: 'https://www.linkedin.com/in/goldenwo/', github: 'https://github.com/goldenwo' },
-  resumePdf: null,
+  resumePdf: '/golden-wo-resume.pdf',
   photoAlt: 'Portrait of Golden Wo',
   ogImageAlt: 'Golden Wo, software engineer building AI systems that hold up in production',
 };
