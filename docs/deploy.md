@@ -14,7 +14,8 @@ owner's to do in the Cloudflare dashboard.
    - Production branch: **main**
    - Build command: `npm run build`
    - Deploy command: `npx wrangler deploy`
-   - Preview command (non-production branches): `npx wrangler preview`
+   - Preview command (non-production branches): `npx wrangler preview` (Worker Previews, open beta; it needs the
+     `previews` block in `wrangler.jsonc`, which may be empty)
    - Preview builds: on. Cloudflare Access: off (public site).
    - Advanced: path `/`; let Cloudflare create the API token; no variables.
 4. **Deploy**. Open the `*.workers.dev` URL and review the page and copy.
